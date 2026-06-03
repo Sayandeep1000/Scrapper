@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B.L.A.S.T. — AI Intelligence Feed</title>
+  <meta name="description" content="Your AI news command center. Live articles from Ben's Bites, The Rundown AI, and Reddit's top AI communities." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=14" />
+  <!-- Unicorn Studio WebGL Engine -->
+  <script src="https://cdn.unicorn.studio/v1.3.2/unicornStudio.umd.js"></script>
+</head>
+<body>
+
+  <!-- Raycast Animated Background -->
+  <div data-us-project="MiiqZiDaKUOWbdlhlARE" class="raycast-bg"></div>
+
+  <!-- ── Top Navigation Bar ── -->
+  <header class="topnav" id="topnav">
+    <div class="topnav-brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+        </svg>
+      </div>
+      <span class="brand-name">B.L.A.S.T.</span>
+      <span class="brand-sep">|</span>
+      <span class="brand-sub">AI News</span>
+    </div>
+
+    <div class="topnav-search" style="position: relative;">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search articles..." autocomplete="off" />
+      <button class="search-clear" id="searchClear" aria-label="Clear">×</button>
+      
+      <!-- Search Autocomplete Dropdown -->
+      <div class="search-dropdown hidden" id="searchDropdown">
+        <div class="search-dropdown-header">Trendy & Recent</div>
+        <ul id="searchDropdownList" class="search-dropdown-list"></ul>
+      </div>
+    </div>
+
+    <div class="topnav-stats">
+      <div class="stat-pill" id="statPillTotal">
+        <span class="stat-pill-num" id="statTotal">0</span>
+        <span class="stat-pill-label">ARTICLES</span>
+      </div>
+      <div class="stat-pill stat-pill--accent" id="statPillSaved">
+        <span class="stat-pill-num" id="statSaved">0</span>
+        <span class="stat-pill-label">SAVED</span>
+      </div>
+      <div class="live-clock-wrap">
+        <div class="live-dot"></div>
+        <span class="live-clock" id="liveClock">00:00</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Filter Bar ── -->
+  <div class="filterbar" id="filterbar">
+    <div class="filterbar-tabs" id="filterTabs">
+      <button class="tab active" data-source="all" id="tabAll">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+        </svg>
+        All Sources
+        <span class="tab-count" id="countAll">0</span>
+      </button>
+      <button class="tab" data-source="airundown" id="tabRundown">
+        <span>⚡</span>
+        The Rundown
+        <span class="tab-count" id="countRundown">0</span>
+      </button>
+      <button class="tab" data-source="bensbites" id="tabBens">
+        <span>🍔</span>
+        Ben's Bites
+        <span class="tab-count" id="countBens">0</span>
+      </button>
+      <button class="tab" data-source="techcrunch" id="tabTechCrunch">
+        <span>🚀</span>
+        TechCrunch
+        <span class="tab-count" id="countTechCrunch">0</span>
+      </button>
+      <button class="tab" data-source="venturebeat" id="tabVentureBeat">
+        <span>💡</span>
+        VentureBeat
+        <span class="tab-count" id="countVentureBeat">0</span>
+      </button>
+      <button class="tab" data-source="mittech" id="tabMIT">
+        <span>🎓</span>
+        MIT Review
+        <span class="tab-count" id="countMIT">0</span>
+      </button>
+      <button class="tab" data-source="theverge" id="tabVerge">
+        <span>📡</span>
+        The Verge
+        <span class="tab-count" id="countVerge">0</span>
+      </button>
+      <button class="tab" data-source="wired" id="tabWired">
+        <span>🔌</span>
+        Wired AI
+        <span class="tab-count" id="countWired">0</span>
+      </button>
+      <button class="tab" data-source="hackernews" id="tabHN">
+        <span>🔶</span>
+        Hacker News
+        <span class="tab-count" id="countHN">0</span>
+      </button>
+      <button class="tab" data-source="reddit_artificial" id="tabArtificial">
+        <span>🤖</span>
+        r/artificial
+        <span class="tab-count" id="countArtificial">0</span>
+      </button>
+      <button class="tab" data-source="reddit_ml" id="tabML">
+        <span>🧠</span>
+        r/ML
+        <span class="tab-count" id="countML">0</span>
+      </button>
+      <button class="tab" data-source="reddit_singularity" id="tabSingularity">
+        <span>🌀</span>
+        r/singularity
+        <span class="tab-count" id="countSingularity">0</span>
+      </button>
+      <button class="tab tab--saved" id="tabSaved" data-action="saved">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+        </svg>
+        Saved
+        <span class="tab-count tab-count--accent" id="savedBadge">0</span>
+      </button>
+    </div>
+
+    <div class="filterbar-right">
+      <div class="last-fetch-wrap">
+        <div class="refresh-dot" id="refreshDot"></div>
+        <span class="last-fetch-text" id="lastFetch">—</span>
+      </div>
+      <button class="theme-pill" id="btnTheme" title="Toggle Light/Dark Mode" aria-label="Toggle theme">
+        <div class="theme-pill-slider"></div>
+        <div class="theme-pill-icon moon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </div>
+        <div class="theme-pill-icon sun">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path><path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path><path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        </div>
+      </button>
+      <button class="btn-lens" id="btnLens" title="Toggle Zoom Lens mode">
+        <div class="lens-dot"></div>
+        Lens
+      </button>
+      <button class="btn-refresh" id="btnRefresh">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+          <path d="M21 3v5h-5"/>
+          <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+          <path d="M8 16H3v5"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Main Content ── -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Loading -->
+    <div class="loading-state" id="loadingState">
+      <div class="article-grid loading-grid">
+        <div class="skeleton-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-line--sm"></div><div class="sk-line"></div><div class="sk-line sk-line--lg"></div><div class="sk-line sk-line--md"></div></div></div>
+        <div class="skeleton-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-line--sm"></div><div class="sk-line"></div><div class="sk-line sk-line--lg"></div><div class="sk-line sk-line--md"></div></div></div>
+        <div class="skeleton-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-line--sm"></div><div class="sk-line"></div><div class="sk-line sk-line--lg"></div><div class="sk-line sk-line--md"></div></div></div>
+        <div class="skeleton-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-line--sm"></div><div class="sk-line"></div><div class="sk-line sk-line--lg"></div><div class="sk-line sk-line--md"></div></div></div>
+        <div class="skeleton-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-line--sm"></div><div class="sk-line"></div><div class="sk-line sk-line--lg"></div><div class="sk-line sk-line--md"></div></div></div>
+        <div class="skeleton-card"><div class="sk-img"></div><div class="sk-lines"><div class="sk-line sk-line--sm"></div><div class="sk-line"></div><div class="sk-line sk-line--lg"></div><div class="sk-line sk-line--md"></div></div></div>
+      </div>
+      <div class="loading-label">
+        <div class="loading-pulse"></div>
+        Fetching latest AI intelligence...
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="empty-panel" id="errorState" style="display:none">
+      <div class="empty-icon">⚠️</div>
+      <h2 class="empty-title">Server Unreachable</h2>
+      <p class="empty-msg" id="errorMsg">Make sure the server is running:<br><code>python tools/serve.py</code></p>
+      <button class="btn-primary" id="btnRetry">Try Again</button>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-panel" id="emptyState" style="display:none">
+      <div class="empty-icon">🔍</div>
+      <h2 class="empty-title">No articles found</h2>
+      <p class="empty-msg">Nothing matches your filter or search.</p>
+    </div>
+
+    <!-- Article Grid -->
+    <div class="article-grid" id="articleGrid"></div>
+
+  </main>
+
+  <!-- ── Saved Panel (Slide-in) ── -->
+  <div class="panel-overlay" id="savedOverlay"></div>
+  <aside class="saved-panel" id="savedPanel">
+    <div class="saved-panel-header">
+      <div class="saved-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+        </svg>
+        Saved Articles
+      </div>
+      <button class="panel-close" id="savedClose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="saved-panel-body">
+      <div class="saved-empty" id="savedEmpty">
+        <span class="saved-empty-icon">📌</span>
+        <p>No saved articles yet.<br/>Click the heart on any article to save it.</p>
+      </div>
+      <div class="saved-list" id="savedList"></div>
+    </div>
+  </aside>
+
+  <!-- ── Article Modal ── -->
+  <div class="modal-overlay" id="modalOverlay"></div>
+  <div class="modal" id="articleModal" role="dialog" aria-modal="true">
+    <div class="modal-top">
+      <div class="modal-source-badge" id="modalSource"></div>
+      <div class="modal-top-actions">
+        <button class="modal-action-btn" id="modalSaveBtn" title="Save article">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+        </button>
+        <button class="modal-action-btn modal-close-btn" id="modalClose" title="Close">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-image-wrap" id="modalImageWrap" style="display:none">
+        <img class="modal-image" id="modalImage" alt="" />
+      </div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-meta" id="modalMeta"></div>
+      <div class="modal-divider"></div>
+      <p class="modal-summary" id="modalSummary"></p>
+    </div>
+    <div class="modal-footer">
+      <a class="btn-primary modal-read-btn" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">
+        Read Full Article
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Hover Tooltip ── -->
+  <div class="hover-tooltip" id="hoverTooltip" aria-hidden="true">
+    <div class="tooltip-source" id="tooltipSource"></div>
+    <div class="tooltip-title" id="tooltipTitle"></div>
+    <div class="tooltip-divider"></div>
+    <div class="tooltip-summary" id="tooltipSummary"></div>
+    <div class="tooltip-time" id="tooltipTime"></div>
+  </div>
+
+  <!-- ── Toast ── -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="app.js?v=11"></script>
+
+  <!-- Liquid Glass Filter Definition -->
+  <svg width="0" height="0" class="hidden" style="display:none;">
+    <defs>
+      <filter id="container-glass" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.05 0.05" numOctaves="1" seed="1" result="turbulence" />
+        <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise" />
+        <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="70" xChannelSelector="R" yChannelSelector="B" result="displaced" />
+        <feGaussianBlur in="displaced" stdDeviation="4" result="finalBlur" />
+        <feComposite in="finalBlur" in2="finalBlur" operator="over" />
+      </filter>
+    </defs>
+  </svg>
+</body>
+</html>

@@ -1,0 +1,11 @@
+﻿
+.tmp/
+__pycache__/
+*.pyc
+.env
+.mcp.json
+.agents/
+.cursor/
+.jetro/
+dashboard/missing_css.txt
+
