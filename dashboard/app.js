@@ -813,7 +813,45 @@ function showTooltip(article, mouseX, mouseY) {
   dom.tooltipSource.textContent  = `${meta.icon} ${meta.label}`;
   dom.tooltipSource.style.color  = meta.color;
   dom.tooltipTitle.textContent   = article.title;
-  dom.tooltipSummary.textContent = article.summary || 'No summary available.';
+  
+  if (!article.summary) {
+    dom.tooltipSummary.textContent = 'No summary available.';
+  } else {
+    // Intelligently generate 3 key points
+    let points = [];
+    
+    // 1. Try splitting by sentences
+    const sentences = article.summary.split(/\. (?=[A-Z])|\.\s*$/).map(s => s.trim()).filter(s => s.length > 10);
+    
+    if (sentences.length >= 3) {
+      points = sentences.slice(0, 3);
+    } else {
+      // 2. Try splitting a long single sentence by commas or semicolons
+      const clauses = article.summary.split(/[,;]\s+(?=[a-zA-Z])/).map(c => c.trim()).filter(c => c.length > 12);
+      if (clauses.length >= 2) {
+        points = clauses.slice(0, 3).map(c => c.charAt(0).toUpperCase() + c.slice(1));
+        if (points.length === 2) {
+            points.push(`Sourced from ${meta.label} for deeper insights.`);
+        }
+      } else {
+        // 3. Fallback: Synthesize 3 points from title, summary, and source metadata
+        points = [
+            `Core Subject: ${article.title.split(' ').slice(0, 8).join(' ')}...`,
+            article.summary,
+            `Trending coverage provided by ${meta.label}`
+        ];
+      }
+    }
+    
+    dom.tooltipSummary.innerHTML = `<ul style="margin: 0; padding-left: 16px; list-style-type: disc;">` + 
+      points.map(p => {
+          let text = p;
+          if (!text.endsWith('.') && !text.endsWith('!') && !text.endsWith('?')) text += '.';
+          return `<li style="margin-bottom: 6px;">${text}</li>`;
+      }).join('') + 
+      `</ul>`;
+  }
+
   dom.tooltipTime.textContent    = '🕐 ' + timeAgo(article.published_at);
   positionTooltip(mouseX, mouseY);
   dom.hoverTooltip.classList.add('visible');
